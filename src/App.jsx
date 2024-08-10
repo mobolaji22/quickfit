@@ -10,6 +10,14 @@ import DailyJournal from "./components/DailyJournal";
 import PrivateRoute from "./components/PrivateRoute";
 import "./styles/variables.css";
 
+const userData = {
+  caloriesBurned: 450,
+  stepsTaken: 10000,
+  activeHours: 2,
+  workoutsCompleted: 5,
+  goalProgress: 70,
+};
+
 function App() {
   return (
     <Router>
@@ -19,7 +27,9 @@ function App() {
           <Route path="/register" element={<Registration />} />
           <Route
             path="/dashboard"
-            element={<PrivateRoute element={Dashboard} />}
+            element={
+              <PrivateRoute element={() => <Dashboard userData={userData} />} />
+            }
           />
           <Route
             path="/workout-tracking"

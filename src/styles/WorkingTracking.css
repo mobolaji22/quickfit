@@ -1,0 +1,62 @@
+/* WorkoutTracking.css */
+
+.workout-tracking-container {
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h2,
+h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.workout-plan ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.workout-plan li {
+  background-color: #fff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-workout {
+  margin-top: 20px;
+}
+
+.add-workout form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-workout form div {
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button[type="submit"] {
+  margin-top: 10px;
+}
