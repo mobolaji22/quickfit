@@ -1,0 +1,153 @@
+/* WorkoutTracking.css */
+
+.workout-tracking-container {
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h2,
+h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.workout-plan ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.workout-plan li {
+  background-color: #fff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.workout-plan input[type="text"] {
+  border: none;
+  background: transparent;
+  font-size: 1em;
+  width: 150px;
+}
+
+.workout-plan input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.logout-button {
+  background-color: #ff4c4c;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.logout-button:hover {
+  background-color: #cc0000;
+}
+
+.add-workout {
+  margin-top: 20px;
+}
+
+.add-workout form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-workout form div {
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button[type="submit"] {
+  margin-top: 10px;
+}
+
+.suggested-workouts {
+  margin-top: 20px;
+}
+
+.suggested-workouts ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.suggested-workouts li {
+  background-color: #e7e7e7;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.suggested-workouts li:hover {
+  background-color: #d0d0d0;
+}
+
+.timer {
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #333;
+}
+
+/* WorkoutTracking.css */
+
+.timer div {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.timer button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.timer button:hover {
+  background-color: #0056b3;
+}
+
+.timer p {
+  font-size: 1.2em;
+  color: #333;
+}
+
+button[type="submit"],
+button.logout-button {
+  margin-top: 10px;
+}
