@@ -1,7 +1,7 @@
-// components/Login.js
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { loginUser } from "../services/authService";
+import { loginUser, getCurrentUser } from "../services/authService"; // Import necessary functions
+import "../styles/Login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -11,10 +11,17 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
+
+    if (!username || !password) {
+      setError("Please fill out both fields.");
+      return;
+    }
+
     const result = loginUser(username, password);
 
     if (result.success) {
-      navigate("/dashboard");
+      const currentUser = getCurrentUser(); // Get the current logged-in user data
+      navigate("/dashboard", { state: { userData: currentUser } }); // Pass user data to the dashboard
     } else {
       setError(result.message);
     }
