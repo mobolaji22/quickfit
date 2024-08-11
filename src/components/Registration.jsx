@@ -1,4 +1,3 @@
-// components/Registration.js
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../services/authService";
@@ -98,19 +97,19 @@ const Registration = () => {
           onChange={(e) => setAge(e.target.value)}
         />
         <input
-          type="text"
+          type="number"
           placeholder="Height (e.g., 170 cm)"
           value={height}
           onChange={(e) => setHeight(e.target.value)}
         />
         <input
-          type="text"
+          type="number"
           placeholder="Weight (e.g., 70 kg)"
           value={weight}
           onChange={(e) => setWeight(e.target.value)}
         />
         <input
-          type="text"
+          type="number"
           placeholder="Body Fat Percentage (e.g., 18%)"
           value={bodyFat}
           onChange={(e) => setBodyFat(e.target.value)}
