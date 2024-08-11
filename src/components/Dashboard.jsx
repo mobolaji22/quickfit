@@ -1,55 +1,54 @@
-// components/Dashboard.js
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { logoutUser, getCurrentUser } from "../services/authService";
+import { UserContext } from "../context/UserContext";
+// import { logoutUser, getCurrentUser } from "../services/authService";
 import "../styles/Dashboard.css";
 
-const Dashboard = ({ userData }) => {
+const Dashboard = () => {
   const navigate = useNavigate();
-  const currentUser = getCurrentUser();
+  const { userData } = useContext(UserContext);
 
   const handleLogout = () => {
-    logoutUser();
+    localStorage.removeItem("userData");
     navigate("/");
   };
 
   return (
     <div className="dashboard-container">
-      <h2>Welcome, {currentUser ? currentUser.username : "User"}</h2>
+      <h2>Welcome, {userData.username}</h2>
       <p>Your Fitness Stage: {userData.fitnessStage}</p>
       <p>Your Fitness Goal: {userData.fitnessGoal}</p>
       <div className="stats">
         <div className="stat-item">
           <h3>Calories Burned</h3>
-          <p>{userData.caloriesBurned || 0} kcal</p>
+          <p>{userData.caloriesBurned} kcal</p>
         </div>
         <div className="stat-item">
           <h3>Steps Taken</h3>
-          <p>{userData.stepsTaken || 0} steps</p>
+          <p>{userData.stepsTaken} steps</p>
         </div>
         <div className="stat-item">
-          <h3>Active Hours</h3>
-          <p>{userData.activeHours || 0} hours</p>
+          <h3>Active Mins</h3>
+          <p>{userData.activeHours} mins</p>
         </div>
         <div className="stat-item">
           <h3>Workouts Completed</h3>
-          <p>{userData.workoutsCompleted || 0}</p>
+          <p>{userData.workoutsCompleted}</p>
         </div>
         <div className="stat-item">
           <h3>Goal Progress</h3>
-          <p>{userData.goalProgress || 0}%</p>
+          <p>{userData.goalProgress}%</p>
         </div>
         <div className="stat-item">
           <h3>Weight Progress</h3>
           <p>
-            {userData.startWeight || userData.weight} kg →{" "}
-            {userData.currentWeight || userData.weight} kg
+            {userData.startWeight} kg → {userData.currentWeight} kg
           </p>
         </div>
         <div className="stat-item">
           <h3>Body Fat Progress</h3>
           <p>
-            {userData.startBodyFat || userData.bodyFat}% →{" "}
-            {userData.currentBodyFat || userData.bodyFat}%
+            {userData.startBodyFat}% → {userData.currentBodyFat}%
           </p>
         </div>
         <div className="stat-item">

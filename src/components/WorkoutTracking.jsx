@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/WorkoutTracking.css";
+import { UserContext } from "../context/UserContext";
 
 const WorkoutTracking = () => {
   const navigate = useNavigate();
+  const { userData, updateUserData } = useContext(UserContext);
 
   const [workouts, setWorkouts] = useState(() => {
     const savedWorkouts = localStorage.getItem("workouts");
@@ -36,19 +38,38 @@ const WorkoutTracking = () => {
   }, [isTimerRunning, timer]);
 
   const toggleCompletion = (id) => {
-    setWorkouts(
-      workouts.map((workout) =>
-        workout.id === id
-          ? { ...workout, completed: !workout.completed }
-          : workout
-      )
+    const updatedWorkouts = workouts.map((workout) =>
+      workout.id === id
+        ? { ...workout, completed: !workout.completed }
+        : workout
     );
+
+    setWorkouts(updatedWorkouts);
+
     if (
       isTimerRunning &&
       workouts.find((workout) => workout.id === id)?.completed
     ) {
       setIsTimerRunning(false);
       setTimer(0);
+    }
+
+    // Update user data when a workout is completed
+    const completedWorkout = updatedWorkouts.find(
+      (workout) => workout.id === id && workout.completed
+    );
+
+    if (completedWorkout) {
+      const workoutDurationInMinutes = parseInt(completedWorkout.duration);
+
+      updateUserData({
+        ...userData,
+        workoutsCompleted: userData.workoutsCompleted + 1,
+        totalWorkoutTime: userData.totalWorkoutTime + workoutDurationInMinutes, // Update total workout time
+        caloriesBurned:
+          userData.caloriesBurned +
+          calculateCaloriesBurned(workoutDurationInMinutes),
+      });
     }
   };
 
@@ -57,6 +78,23 @@ const WorkoutTracking = () => {
   };
 
   const removeWorkout = (id) => {
+    const workoutToRemove = workouts.find((workout) => workout.id === id);
+
+    // Update user data when a workout is removed
+    const updatedUserData = {
+      ...userData,
+      workoutsCompleted: workoutToRemove.completed
+        ? userData.workoutsCompleted - 1
+        : userData.workoutsCompleted,
+      totalWorkoutTime:
+        userData.totalWorkoutTime - parseInt(workoutToRemove.duration),
+      caloriesBurned:
+        userData.caloriesBurned -
+        calculateCaloriesBurned(workoutToRemove.duration),
+    };
+
+    updateUserData(updatedUserData);
+
     setWorkouts(workouts.filter((workout) => workout.id !== id));
   };
 
@@ -99,6 +137,13 @@ const WorkoutTracking = () => {
   const addWorkoutFromSuggestion = (suggestion) => {
     const [name, duration] = suggestion.split(" - ");
     addWorkout({ name, duration, completed: false });
+  };
+
+  // Function to calculate calories burned based on duration
+  const calculateCaloriesBurned = (duration) => {
+    const minutes = parseInt(duration);
+    // Assuming a basic rate of 10 calories per minute as an example
+    return minutes * 10;
   };
 
   return (
