@@ -46,30 +46,48 @@ const WorkoutTracking = () => {
 
     setWorkouts(updatedWorkouts);
 
-    if (
-      isTimerRunning &&
-      workouts.find((workout) => workout.id === id)?.completed
-    ) {
-      setIsTimerRunning(false);
-      setTimer(0);
-    }
-
-    // Update user data when a workout is completed
     const completedWorkout = updatedWorkouts.find(
-      (workout) => workout.id === id && workout.completed
+      (workout) => workout.id === id
     );
 
-    if (completedWorkout) {
-      const workoutDurationInMinutes = parseInt(completedWorkout.duration);
+    const workoutDurationInMinutes = parseInt(completedWorkout.duration);
 
+    if (completedWorkout && completedWorkout.completed) {
+      // If the workout is completed, update user data
       updateUserData({
         ...userData,
         workoutsCompleted: userData.workoutsCompleted + 1,
-        totalWorkoutTime: userData.totalWorkoutTime + workoutDurationInMinutes, // Update total workout time
+        totalWorkoutTime: userData.totalWorkoutTime + workoutDurationInMinutes,
         caloriesBurned:
           userData.caloriesBurned +
           calculateCaloriesBurned(workoutDurationInMinutes),
+        activeMinutes: userData.activeMinutes + workoutDurationInMinutes,
       });
+    } else if (completedWorkout && !completedWorkout.completed) {
+      // If the workout is unchecked (marked as not completed), subtract the values
+      updateUserData({
+        ...userData,
+        workoutsCompleted: Math.max(userData.workoutsCompleted - 1, 0),
+        totalWorkoutTime: Math.max(
+          userData.totalWorkoutTime - workoutDurationInMinutes,
+          0
+        ),
+        caloriesBurned: Math.max(
+          userData.caloriesBurned -
+            calculateCaloriesBurned(workoutDurationInMinutes),
+          0
+        ),
+        activeMinutes: Math.max(
+          userData.activeMinutes - workoutDurationInMinutes,
+          0
+        ),
+      });
+    }
+
+    // Stop the timer if the workout is marked as completed
+    if (isTimerRunning && completedWorkout?.completed) {
+      setIsTimerRunning(false);
+      setTimer(0);
     }
   };
 
@@ -80,20 +98,29 @@ const WorkoutTracking = () => {
   const removeWorkout = (id) => {
     const workoutToRemove = workouts.find((workout) => workout.id === id);
 
-    // Update user data when a workout is removed
-    const updatedUserData = {
-      ...userData,
-      workoutsCompleted: workoutToRemove.completed
-        ? userData.workoutsCompleted - 1
-        : userData.workoutsCompleted,
-      totalWorkoutTime:
-        userData.totalWorkoutTime - parseInt(workoutToRemove.duration),
-      caloriesBurned:
-        userData.caloriesBurned -
-        calculateCaloriesBurned(workoutToRemove.duration),
-    };
+    const workoutDurationInMinutes = parseInt(workoutToRemove.duration);
 
-    updateUserData(updatedUserData);
+    if (workoutToRemove.completed) {
+      const updatedUserData = {
+        ...userData,
+        workoutsCompleted: Math.max(userData.workoutsCompleted - 1, 0),
+        totalWorkoutTime: Math.max(
+          userData.totalWorkoutTime - workoutDurationInMinutes,
+          0
+        ),
+        caloriesBurned: Math.max(
+          userData.caloriesBurned -
+            calculateCaloriesBurned(workoutDurationInMinutes),
+          0
+        ),
+        activeMinutes: Math.max(
+          userData.activeMinutes - workoutDurationInMinutes,
+          0
+        ),
+      };
+
+      updateUserData(updatedUserData);
+    }
 
     setWorkouts(workouts.filter((workout) => workout.id !== id));
   };
