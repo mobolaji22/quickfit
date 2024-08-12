@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-// import { logoutUser, getCurrentUser } from "../services/authService";
 import "../styles/Dashboard.css";
 
 const Dashboard = () => {
@@ -24,12 +23,16 @@ const Dashboard = () => {
           <p>{userData.caloriesBurned} kcal</p>
         </div>
         <div className="stat-item">
+          <h3>Calories Gained</h3>
+          <p>{userData.caloriesGained || 0} kcal</p>
+        </div>
+        <div className="stat-item">
           <h3>Steps Taken</h3>
           <p>{userData.stepsTaken} steps</p>
         </div>
         <div className="stat-item">
           <h3>Active Mins</h3>
-          <p>{userData.activeHours} mins</p>
+          <p>{userData.activeMinutes} mins</p>
         </div>
         <div className="stat-item">
           <h3>Workouts Completed</h3>
@@ -43,12 +46,14 @@ const Dashboard = () => {
           <h3>Weight Progress</h3>
           <p>
             {userData.startWeight} kg → {userData.currentWeight} kg
+            <br />({userData.weightProgress}% achieved)
           </p>
         </div>
         <div className="stat-item">
           <h3>Body Fat Progress</h3>
           <p>
             {userData.startBodyFat}% → {userData.currentBodyFat}%
+            <br />({userData.bodyFatProgress}% achieved)
           </p>
         </div>
         <div className="stat-item">
