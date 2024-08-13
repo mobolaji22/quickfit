@@ -53,7 +53,6 @@ const WorkoutTracking = () => {
     const workoutDurationInMinutes = parseInt(completedWorkout.duration);
 
     if (completedWorkout && completedWorkout.completed) {
-      // If the workout is completed, update user data
       updateUserData({
         ...userData,
         workoutsCompleted: userData.workoutsCompleted + 1,
@@ -64,7 +63,6 @@ const WorkoutTracking = () => {
         activeMinutes: userData.activeMinutes + workoutDurationInMinutes,
       });
     } else if (completedWorkout && !completedWorkout.completed) {
-      // If the workout is unchecked (marked as not completed), subtract the values
       updateUserData({
         ...userData,
         workoutsCompleted: Math.max(userData.workoutsCompleted - 1, 0),
@@ -84,7 +82,6 @@ const WorkoutTracking = () => {
       });
     }
 
-    // Stop the timer if the workout is marked as completed
     if (isTimerRunning && completedWorkout?.completed) {
       setIsTimerRunning(false);
       setTimer(0);
@@ -166,11 +163,9 @@ const WorkoutTracking = () => {
     addWorkout({ name, duration, completed: false });
   };
 
-  // Function to calculate calories burned based on duration
   const calculateCaloriesBurned = (duration) => {
     const minutes = parseInt(duration);
-    // Assuming a basic rate of 10 calories per minute as an example
-    return minutes * 10;
+    return minutes * 10; // Adjust this rate as needed
   };
 
   return (
@@ -179,6 +174,7 @@ const WorkoutTracking = () => {
       <button onClick={handleLogout} className="logout-button">
         Logout
       </button>
+
       <div className="workout-plan">
         <h3>Today&apos;s Workout Plan</h3>
         <ul>

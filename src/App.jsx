@@ -10,13 +10,7 @@ import DailyJournal from "./components/DailyJournal";
 import PrivateRoute from "./components/PrivateRoute";
 import "./styles/variables.css";
 
-const userData = {
-  caloriesBurned: 450,
-  stepsTaken: 10000,
-  activeHours: 2,
-  workoutsCompleted: 5,
-  goalProgress: 70,
-};
+const userData = {};
 
 function App() {
   return (
