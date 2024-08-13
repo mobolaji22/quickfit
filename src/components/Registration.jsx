@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 import { registerUser } from "../services/authService";
 import "../styles/Registration.css";
 
@@ -14,6 +15,7 @@ const Registration = () => {
   const [fitnessGoal, setFitnessGoal] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { updateUserData } = useContext(UserContext); // Use context to update user data
 
   const determineFitnessStage = (age, weight, bodyFat, strengthLevel) => {
     if (strengthLevel === "Beginner" && bodyFat > 20) {
@@ -63,12 +65,26 @@ const Registration = () => {
       strengthLevel,
       fitnessGoal,
       fitnessStage,
+      caloriesBurned: 0,
+      caloriesGained: 0,
+      stepsTaken: 0,
+      activeMinutes: 0,
+      workoutsCompleted: 0,
+      goalProgress: 0,
+      startWeight: weight,
+      currentWeight: weight,
+      startBodyFat: bodyFat,
+      currentBodyFat: bodyFat,
+      weightProgress: 0,
+      bodyFatProgress: 0,
     };
 
     const result = registerUser(userData);
 
     if (result.success) {
-      navigate("/dashboard", { state: { userData } });
+      localStorage.setItem("userData", JSON.stringify(userData));
+      updateUserData(userData); // Update context with new user data
+      navigate("/dashboard");
     } else {
       setError(result.message);
     }
@@ -78,6 +94,7 @@ const Registration = () => {
     <div className="registration-container">
       <h2>Register</h2>
       <form onSubmit={handleRegistration}>
+        {/* Form inputs */}
         <input
           type="text"
           placeholder="Username"

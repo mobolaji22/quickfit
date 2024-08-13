@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import "../styles/ConsumptionTracking.css";
@@ -8,15 +8,27 @@ const ConsumptionTracking = () => {
   const [calories, setCalories] = useState("");
   const [consumptions, setConsumptions] = useState(() => {
     const savedConsumptions = localStorage.getItem("consumptions");
-    return savedConsumptions ? JSON.parse(savedConsumptions) : [];
+    return savedConsumptions ? JSON.parse(savedConsumptions) : {};
   });
+  const [currentDate, setCurrentDate] = useState(
+    new Date().toISOString().split("T")[0] // Using ISO format for date input compatibility
+  );
+  const [dailyTotalCalories, setDailyTotalCalories] = useState(0);
 
   const { userData, updateUserData } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Update local storage and calculate daily totals
     localStorage.setItem("consumptions", JSON.stringify(consumptions));
-  }, [consumptions]);
+    calculateDailyTotalCalories(currentDate);
+  }, [consumptions, currentDate]);
+
+  const calculateDailyTotalCalories = (date) => {
+    const total =
+      consumptions[date]?.reduce((acc, entry) => acc + entry.calories, 0) || 0;
+    setDailyTotalCalories(total);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,22 +38,39 @@ const ConsumptionTracking = () => {
         id: Date.now(),
         food,
         calories: parseInt(calories),
-        date: new Date().toLocaleDateString(),
+        date: currentDate,
         time: new Date().toLocaleTimeString(),
       };
 
-      setConsumptions([...consumptions, newEntry]);
+      setConsumptions((prevConsumptions) => {
+        const updatedConsumptions = { ...prevConsumptions };
+        if (!updatedConsumptions[currentDate]) {
+          updatedConsumptions[currentDate] = [];
+        }
+        // Check if the entry already exists for today
+        const existingEntryIndex = updatedConsumptions[currentDate].findIndex(
+          (entry) =>
+            entry.food === newEntry.food && entry.time === newEntry.time
+        );
+        if (existingEntryIndex === -1) {
+          updatedConsumptions[currentDate].push(newEntry);
+        }
+        return updatedConsumptions;
+      });
 
-      // Update calories gained in user data
       const updatedUserData = {
         ...userData,
-        caloriesGained: userData.caloriesGained + newEntry.calories,
+        caloriesGained: userData.caloriesGained + parseInt(calories),
       };
       updateUserData(updatedUserData);
 
       setFood("");
       setCalories("");
     }
+  };
+
+  const handleDateChange = (e) => {
+    setCurrentDate(e.target.value);
   };
 
   const handleNavigateToDashboard = () => {
@@ -69,19 +98,37 @@ const ConsumptionTracking = () => {
         </button>
       </form>
 
-      {consumptions.length > 0 && (
+      <div className="date-navigation">
+        <input type="date" value={currentDate} onChange={handleDateChange} />
+      </div>
+
+      <div className="daily-total">
+        <h3>
+          Total Calories for {new Date(currentDate).toLocaleDateString()}:{" "}
+          {dailyTotalCalories} kcal
+        </h3>
+      </div>
+
+      {consumptions[currentDate] && consumptions[currentDate].length > 0 ? (
         <div className="consumption-entries">
-          <h3>Tracked Consumptions</h3>
+          <h3>
+            Tracked Consumptions for{" "}
+            {new Date(currentDate).toLocaleDateString()}
+          </h3>
           <ul className="entries-list">
-            {consumptions.map((entry) => (
+            {consumptions[currentDate].map((entry) => (
               <li key={entry.id} className="entry-item">
                 <strong>{entry.food}</strong> - {entry.calories} Calories
                 <div className="entry-details">
-                  {entry.date} at {entry.time}
+                  {new Date(entry.date).toLocaleDateString()} at {entry.time}
                 </div>
               </li>
             ))}
           </ul>
+        </div>
+      ) : (
+        <div className="no-entries">
+          No entries found for {new Date(currentDate).toLocaleDateString()}
         </div>
       )}
 
